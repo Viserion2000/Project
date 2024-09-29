@@ -7,6 +7,7 @@ import { HiDocumentText } from "react-icons/hi2";
 import { signoutSuccess } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { FaBookReader } from "react-icons/fa";
 
 export default function Dashsidebar() {
     const location = useLocation();
@@ -43,6 +44,18 @@ export default function Dashsidebar() {
     <Sidebar className='w-full md:w-56'>
         <Sidebar.Items>
             <Sidebar.ItemGroup className='flex flex-col gap-1'>
+              {
+                currentUser && currentUser.isAdmin && (
+                  <Link to='/dashboard?tab=dash'>
+                    <Sidebar.Item
+                    active={tab === 'dash' || !tab }
+                    icon={HiChartPie}
+                    as='div'>
+                      Dashboard
+                    </Sidebar.Item>
+                  </Link>
+                )
+              }
                 <Link to={"/dashboard?tab=profile"}>
                 <Sidebar.Item 
                 active ={tab === 'profile'}
@@ -53,16 +66,30 @@ export default function Dashsidebar() {
                     Profile
                 </Sidebar.Item>
                 </Link>
-               
-                {/* <Link to= "/dashboard?tab=posts">
+
+                {currentUser.isAdmin && (
+            <Link to='/dashboard?tab=users'>
+              <Sidebar.Item
+                active={tab === 'users'}
+                icon={HiOutlineUserGroup}
+                as='div'
+              >
+                Users
+              </Sidebar.Item>
+            </Link>
+          )}
+               {currentUser.isAdmin && (
+                
+                <Link to= "/dashboard?tab=posts">
                 <Sidebar.Item
                 active ={tab === 'posts'}
-                icon = {HiDocumentText }
+                icon = {FaBookReader }
                 as='div'
                 >
-                  Posts
+                 User Posts
                 </Sidebar.Item>
-                </Link> */}
+                </Link>
+               )}
 
                 <Link to= "/dashboard?tab=newposts">
                 <Sidebar.Item

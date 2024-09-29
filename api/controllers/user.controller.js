@@ -58,7 +58,7 @@ export const updateUser = async (req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => {
-  if (req.user.id !== req.params.userId) {
+  if (!req.user.isAdmin && req.user.id !== req.params.userId) {
     return next (errorHandler(403, 'You are not allowed  to delete this user'));
   } 
   try {
@@ -135,7 +135,7 @@ try {
       now.getMonth() -1,
       now.getDate()
     );
-    const lastMonthUsers = await User.Documents({
+    const lastMonthUsers = await User.countDocuments({
       createdAt : { $gte: oneMonthAgo },
 
     });
@@ -150,3 +150,17 @@ try {
   next(error )
 }
 };
+
+export const getCommentUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return next(errorHandler(404, 'User not found'));
+    }
+    const { password, ...rest } = user._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+    
+  }
+}
